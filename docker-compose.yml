@@ -1,0 +1,10 @@
+version: "3.9"
+
+services:
+  goravel:
+    build: .
+    container_name: goravel-app
+    ports:
+      - "8080:8080"
+    volumes:
+      - .:/app
