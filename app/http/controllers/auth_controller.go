@@ -29,9 +29,7 @@ func (r *AuthController) Login(ctx http.Context) http.Response {
 
 	if !facades.Hash().Check(password, hashedPassword) {
 		// The passwords match...
-		return ctx.Response().Status(500).Json(http.Json{
-			"Hello": "Goravel",
-		})
+		return ctx.Response().Status(401).Json("Unauthorized")
 	}
 
 	var user models.Employee
@@ -41,7 +39,7 @@ func (r *AuthController) Login(ctx http.Context) http.Response {
 		Where("email", email).
 		First(&user)
 	if err != nil {
-		return ctx.Response().Status(500).Json(http.Json{
+		return ctx.Response().Status(400).Json(http.Json{
 			"error": "Employee is invalid.",
 		})
 	}

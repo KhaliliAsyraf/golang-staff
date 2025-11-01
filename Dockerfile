@@ -13,4 +13,4 @@ RUN go mod download
 # Copy the rest of the project
 COPY . .
 
-CMD ["go", "run", "."]
+CMD ["go", "run", ".", "--port", "8080"]

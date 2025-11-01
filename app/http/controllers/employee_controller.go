@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"goravel/app/http/requests/employee"
 	"goravel/app/models"
 
 	"github.com/goravel/framework/contracts/http"
@@ -22,6 +23,15 @@ func (r *EmployeeController) Index(ctx http.Context) http.Response {
 }
 
 func (r *EmployeeController) Store(ctx http.Context) http.Response {
+	var request employee.StoreEmployeeRequest
+	errors, err := ctx.Request().ValidateRequest(&request)
+
+	if errors != nil {
+		return ctx.Response().Json(http.StatusUnprocessableEntity, http.Json{
+			"error": "Unprocessable entity.",
+		})
+	}
+
 	hashedPassword, err := facades.Hash().Make("password")
 	if err != nil {
 		return ctx.Response().Json(http.StatusInternalServerError, http.Json{
@@ -31,7 +41,7 @@ func (r *EmployeeController) Store(ctx http.Context) http.Response {
 
 	employee := models.Employee{
 		Name:     ctx.Request().Input("name"),
-		Email:    ctx.Request().Input("name"),
+		Email:    ctx.Request().Input("email"),
 		Password: hashedPassword,
 		Type:     "staff",
 	}
