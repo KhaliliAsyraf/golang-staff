@@ -130,3 +130,33 @@ Response Example:
   }
 ]
 ```
+
+---
+
+## 🧪 Running Feature Tests
+
+### 1️⃣ Setup Testing Environment
+Before running feature tests, make sure you have a .env.testing file configured with a separate testing database to prevent overwriting your main data.
+
+Example .env.testing file:
+```
+APP_PORT=3000
+DB_HOST=localhost
+DB_PORT=5432
+DB_USER=postgres
+DB_PASSWORD=postgres
+DB_NAME=employee_leaves_testing
+```
+
+### 2️⃣ Test File Location
+
+All test files are located under the tests/ directory.
+
+### 3️⃣ Run Tests
+
+Open your terminal and execute:
+```
+go test ./... --env=.env.testing
+```
+
+This will run all available test cases using your testing environment configuration.
