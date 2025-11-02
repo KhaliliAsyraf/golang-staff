@@ -5,7 +5,10 @@ import (
 	"github.com/goravel/framework/facades"
 
 	"goravel/app/http/controllers"
-	"goravel/app/http/middleware"
+
+	customMiddleware "goravel/app/http/middleware"
+
+	importMiddleware "github.com/goravel/framework/http/middleware"
 )
 
 func Api() {
@@ -13,15 +16,14 @@ func Api() {
 	facades.Route().Get("/users/{id}", userController.Show)
 
 	authController := controllers.NewAuthController()
-	facades.Route().Post("/login", authController.Login)
-
-	registrationController := controllers.NewRegistrationController()
-	facades.Route().Post("/registration", registrationController.Store)
+	facades.Route().
+		Middleware(importMiddleware.Throttle("login")). // rate limiting middleware
+		Post("/login", authController.Login)
 
 	// --- Employee ---
 	employeeController := controllers.NewEmployeeController()
 	facades.Route().
-		Middleware(middleware.Auth()).
+		Middleware(customMiddleware.Auth()).
 		Prefix("employee").
 		Group(func(router route.Router) {
 			router.Post("/", employeeController.Store)
@@ -31,7 +33,7 @@ func Api() {
 	departmentController := controllers.NewDepartmentController()
 	facades.Route().
 		Prefix("department").
-		Middleware(middleware.Auth()).
+		Middleware(customMiddleware.Auth()).
 		Group(func(router route.Router) {
 			router.Get("/", departmentController.Index)
 		})

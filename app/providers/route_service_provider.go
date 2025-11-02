@@ -1,8 +1,11 @@
 package providers
 
 import (
+	contractshttp "github.com/goravel/framework/contracts/http"
+
 	"github.com/goravel/framework/contracts/foundation"
 	"github.com/goravel/framework/facades"
+	"github.com/goravel/framework/http/limit"
 
 	"goravel/app/http"
 	"goravel/routes"
@@ -26,5 +29,7 @@ func (receiver *RouteServiceProvider) Boot(app foundation.Application) {
 }
 
 func (receiver *RouteServiceProvider) configureRateLimiting() {
-
+	facades.RateLimiter().For("login", func(ctx contractshttp.Context) contractshttp.Limit {
+		return limit.PerMinute(2).By(ctx.Request().Ip())
+	})
 }
