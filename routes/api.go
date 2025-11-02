@@ -20,9 +20,12 @@ func Api() {
 
 	// --- Employee ---
 	employeeController := controllers.NewEmployeeController()
-	facades.Route().Prefix("employee").Group(func(router route.Router) {
-		router.Post("/", employeeController.Store)
-	})
+	facades.Route().
+		Middleware(middleware.Auth()).
+		Prefix("employee").
+		Group(func(router route.Router) {
+			router.Post("/", employeeController.Store)
+		})
 
 	// --- Department ---
 	departmentController := controllers.NewDepartmentController()

@@ -28,7 +28,7 @@ func (r *EmployeeController) Store(ctx http.Context) http.Response {
 
 	if errors != nil {
 		return ctx.Response().Json(http.StatusUnprocessableEntity, http.Json{
-			"error": "Unprocessable entity.",
+			"error": errors.All(),
 		})
 	}
 
