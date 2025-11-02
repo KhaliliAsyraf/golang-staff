@@ -2,6 +2,7 @@ package seeders
 
 import (
 	"goravel/app/models"
+	"log"
 
 	"github.com/goravel/framework/facades"
 )
@@ -16,7 +17,16 @@ func (s *DepartmentSeeder) Signature() string {
 
 // Run executes the seeder logic.
 func (s *DepartmentSeeder) Run() error {
+	err := facades.DB().Statement("TRUNCATE TABLE departments")
+	if err != nil {
+		log.Println("truncate error:", err)
+		return err
+	}
+
 	dpmt := []models.Department{
+		{
+			Name: "Admin",
+		},
 		{
 			Name: "HR",
 		},
@@ -30,5 +40,14 @@ func (s *DepartmentSeeder) Run() error {
 			Name: "Risk",
 		},
 	}
-	return facades.Orm().Query().Create(&dpmt)
+
+	if err := facades.Orm().Query().Create(&dpmt); err != nil {
+		return err
+	}
+
+	if err := facades.Cache().Put("departments", dpmt, 0); err != nil {
+		return err
+	}
+
+	return nil
 }

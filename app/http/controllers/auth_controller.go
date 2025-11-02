@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"goravel/app/http/requests/auth"
 	"goravel/app/models"
 
 	"github.com/goravel/framework/contracts/http"
@@ -22,6 +23,20 @@ func (r *AuthController) Index(ctx http.Context) http.Response {
 }
 
 func (r *AuthController) Login(ctx http.Context) http.Response {
+	var request auth.LoginRequest
+	errors, err := ctx.Request().ValidateRequest(&request)
+	if err != nil {
+		return ctx.Response().Json(http.StatusInternalServerError, http.Json{
+			"error": "Something wrong with logging in",
+		})
+	}
+
+	if errors != nil {
+		return ctx.Response().Json(http.StatusUnprocessableEntity, http.Json{
+			"error": errors.All(),
+		})
+	}
+
 	email := ctx.Request().Input("email")
 	password := ctx.Request().Input("password")
 

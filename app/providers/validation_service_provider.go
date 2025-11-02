@@ -1,6 +1,8 @@
 package providers
 
 import (
+	"goravel/app/rules"
+
 	"github.com/goravel/framework/contracts/foundation"
 	"github.com/goravel/framework/contracts/validation"
 	"github.com/goravel/framework/facades"
@@ -23,7 +25,9 @@ func (receiver *ValidationServiceProvider) Boot(app foundation.Application) {
 }
 
 func (receiver *ValidationServiceProvider) rules() []validation.Rule {
-	return []validation.Rule{}
+	return []validation.Rule{
+		&rules.EmployeeEmailExistsRule{},
+	}
 }
 
 func (receiver *ValidationServiceProvider) filters() []validation.Filter {
