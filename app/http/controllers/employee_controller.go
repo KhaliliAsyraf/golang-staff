@@ -2,10 +2,9 @@ package controllers
 
 import (
 	"goravel/app/http/requests/employee"
-	"goravel/app/models"
+	"goravel/app/services"
 
 	"github.com/goravel/framework/contracts/http"
-	"github.com/goravel/framework/facades"
 )
 
 type EmployeeController struct {
@@ -43,38 +42,16 @@ func (r *EmployeeController) Store(ctx http.Context) http.Response {
 		})
 	}
 
-	hashedPassword, err := facades.Hash().Make("password")
-	if err != nil {
+	// employee := r.employeeService.DoSomething()
+	employeeService := services.EmployeeService{}
+	var data, storeErr = employeeService.StoreEmployee(ctx.Request().All())
+	if storeErr != nil {
 		return ctx.Response().Json(http.StatusInternalServerError, http.Json{
-			"error": "Something wrong with saving employee",
+			"error": storeErr.Error(),
 		})
 	}
-
-	tx, err := facades.Orm().Query().BeginTransaction()
-	if err != nil {
-		return ctx.Response().Json(http.StatusInternalServerError, http.Json{
-			"error": "Something wrong with saving employee",
-		})
-	}
-
-	employee := models.Employee{
-		Name:     ctx.Request().Input("name"),
-		Email:    ctx.Request().Input("email"),
-		Password: hashedPassword,
-		Type:     "staff",
-	}
-	err = facades.Orm().Query().Create(&employee)
-
-	if err != nil {
-		tx.Rollback()
-		return ctx.Response().Json(http.StatusInternalServerError, http.Json{
-			"error": "Something wrong with saving employee",
-		})
-	}
-
-	tx.Commit()
 
 	return ctx.Response().Success().Json(http.Json{
-		"message": "Employee created successfully!",
+		"data": data["employee"],
 	})
 }
