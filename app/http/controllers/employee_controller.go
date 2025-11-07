@@ -17,8 +17,21 @@ func NewEmployeeController() *EmployeeController {
 	}
 }
 
+/**
+ * Index handles the request to list employees.
+ *
+ * @param ctx http.Context
+ * @return http.Response
+ */
 func (r *EmployeeController) Index(ctx http.Context) http.Response {
-	return nil
+	employeeService := services.EmployeeService{}
+	var data, storeErr = employeeService.List(ctx.Request().All())
+	if storeErr != nil {
+		return ctx.Response().Json(http.StatusInternalServerError, http.Json{
+			"error": storeErr.Error(),
+		})
+	}
+	return ctx.Response().Json(http.StatusOK, data)
 }
 
 /**
@@ -54,4 +67,8 @@ func (r *EmployeeController) Store(ctx http.Context) http.Response {
 	return ctx.Response().Success().Json(http.Json{
 		"data": data["employee"],
 	})
+}
+
+func (r *EmployeeController) Get(ctx http.Context) http.Response {
+	return nil
 }

@@ -26,6 +26,7 @@ func Api() {
 		Middleware(customMiddleware.Auth()).
 		Prefix("employee").
 		Group(func(router route.Router) {
+			router.Get("/", employeeController.Index)
 			router.Post("/", employeeController.Store)
 		})
 

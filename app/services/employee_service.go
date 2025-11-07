@@ -10,10 +10,10 @@ import (
 
 type EmployeeService struct{}
 
-// Example method
 func (s *EmployeeService) StoreEmployee(data map[string]any) (map[string]any, error) {
 	email, _ := data["email"].(string)
 	name, _ := data["name"].(string)
+	departmentId, _ := data["department_id"].(float64) // JSON numbers are float64
 
 	hashedPassword, err := facades.Hash().Make("password")
 	if err != nil {
@@ -25,11 +25,14 @@ func (s *EmployeeService) StoreEmployee(data map[string]any) (map[string]any, er
 		return nil, errors.New("something went wrong while saving employee")
 	}
 
+	facades.Log().Info("Dept ID: ", departmentId)
+
 	employee := models.Employee{
-		Name:     name,
-		Email:    email,
-		Password: hashedPassword,
-		Type:     "staff",
+		Name:          name,
+		Email:         email,
+		Password:      hashedPassword,
+		Type:          "staff",
+		IdDepartments: int(departmentId),
 	}
 	err = facades.Orm().Query().Create(&employee)
 
@@ -42,5 +45,17 @@ func (s *EmployeeService) StoreEmployee(data map[string]any) (map[string]any, er
 
 	return map[string]any{
 		"employee": employee,
+	}, nil
+}
+
+func (s *EmployeeService) List(data map[string]any) (map[string]any, error) {
+	var employees []models.Employee
+	err := facades.Orm().Query().With("Department").Get(&employees)
+	if err != nil {
+		return nil, errors.New("something went wrong while fetching employees")
+	}
+
+	return map[string]any{
+		"employees": employees,
 	}, nil
 }

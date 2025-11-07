@@ -6,5 +6,7 @@ import (
 
 type Department struct {
 	orm.Model
+	ID   uint `gorm:"primaryKey"`
 	Name string
+	// Employees []Employee `gorm:"foreignKey:IdDepartments;references:ID"`
 }

@@ -26,7 +26,7 @@ func (receiver *ValidationServiceProvider) Boot(app foundation.Application) {
 
 func (receiver *ValidationServiceProvider) rules() []validation.Rule {
 	return []validation.Rule{
-		&rules.EmployeeEmailExistsRule{},
+		&rules.ExistsRule{},
 	}
 }
 

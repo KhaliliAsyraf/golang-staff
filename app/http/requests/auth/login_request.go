@@ -20,7 +20,7 @@ func (r *LoginRequest) Filters(ctx http.Context) map[string]string {
 
 func (r *LoginRequest) Rules(ctx http.Context) map[string]string {
 	return map[string]string{
-		"email":    "required|employee_email_exists",
+		"email":    "required|exists:employees,email",
 		"password": "required|min_len:6",
 	}
 }

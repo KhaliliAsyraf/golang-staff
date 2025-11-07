@@ -6,8 +6,9 @@ import (
 )
 
 type StoreEmployeeRequest struct {
-	Name  string `form:"name" json:"name"`
-	Email string `form:"email" json:"email"`
+	Name         string `form:"name" json:"name"`
+	Email        string `form:"email" json:"email"`
+	DepartmentId int    `form:"department_id" json:"department_id"`
 }
 
 func (r *StoreEmployeeRequest) Authorize(ctx http.Context) error {
@@ -20,8 +21,9 @@ func (r *StoreEmployeeRequest) Filters(ctx http.Context) map[string]string {
 
 func (r *StoreEmployeeRequest) Rules(ctx http.Context) map[string]string {
 	return map[string]string{
-		"name":  "required|max_len:255",
-		"email": "required|email",
+		"name":          "required|max_len:255",
+		"email":         "required|email",
+		"department_id": "required|exists:departments,id",
 	}
 }
 

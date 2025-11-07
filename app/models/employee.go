@@ -6,11 +6,13 @@ import (
 
 type Employee struct {
 	orm.Model
-	ID       uint `gorm:"primaryKey"`
-	Name     string
-	Email    string
-	Password string
-	Type     string
+	ID            uint `gorm:"primaryKey"`
+	Name          string
+	Email         string
+	Password      string     `json:"-"`
+	Type          string     `gorm:"type:enum('admin','staff');default:'staff'"`
+	IdDepartments int        `gorm:"column:id_departments"`
+	Department    Department `gorm:"foreignKey:IdDepartments;references:ID"`
 }
 
 func (r *Employee) TableName() string {
