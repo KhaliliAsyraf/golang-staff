@@ -31,6 +31,7 @@ func (s *AdminSeeder) Run() error {
 			Email:    "admin@example.com",
 			Password: hashedPassword,
 			Type:     "admin",
+			Gender:   "male",
 		},
 	}
 	return facades.Orm().Query().Create(&user)

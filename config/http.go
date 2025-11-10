@@ -59,5 +59,8 @@ func init() {
 			"max_conns_per_host":      config.GetInt("HTTP_CLIENT_MAX_CONN_PER_HOST"),
 			"idle_conn_timeout":       config.GetDuration("HTTP_CLIENT_IDLE_CONN_TIMEOUT"),
 		},
+		"gender": map[string]any{
+			"url": config.Env("GENDER_URL", ""),
+		},
 	})
 }

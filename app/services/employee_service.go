@@ -25,7 +25,11 @@ func (s *EmployeeService) StoreEmployee(data map[string]any) (map[string]any, er
 		return nil, errors.New("something went wrong while saving employee")
 	}
 
-	facades.Log().Info("Dept ID: ", departmentId)
+	gender, err := s.GetGender(name)
+	if err != nil {
+		facades.Log().Error("Failed to get gender, defaulting to unknown:", err)
+		gender = "unknown"
+	}
 
 	employee := models.Employee{
 		Name:          name,
@@ -33,6 +37,7 @@ func (s *EmployeeService) StoreEmployee(data map[string]any) (map[string]any, er
 		Password:      hashedPassword,
 		Type:          "staff",
 		IdDepartments: int(departmentId),
+		Gender:        gender,
 	}
 	err = facades.Orm().Query().Create(&employee)
 
@@ -58,4 +63,26 @@ func (s *EmployeeService) List(data map[string]any) (map[string]any, error) {
 	return map[string]any{
 		"employees": employees,
 	}, nil
+}
+
+func (s *EmployeeService) GetGender(name string) (string, error) {
+	genderUrl := facades.Config().Get("http.gender.url")
+	res, err := facades.Http().
+		WithQueryParameter("name", name).
+		Get(genderUrl.(string))
+	if err != nil {
+		return "", errors.New("something went wrong while fetching employees")
+	}
+
+	body, err := res.Json()
+	if err != nil {
+		return "", errors.New("failed to parse gender response")
+	}
+
+	gender, ok := body["gender"].(string)
+	if !ok || gender == "" {
+		gender = "unknown"
+	}
+
+	return gender, nil
 }

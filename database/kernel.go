@@ -18,6 +18,7 @@ func (kernel Kernel) Migrations() []schema.Migration {
 		&migrations.M20251031031154CreateDepartmentsTable{},
 		&migrations.M20251031032943CreateEmployeesTable{},
 		&migrations.M20251102023214AddDepartmentIdColumnOnEmployeeTable{},
+		&migrations.M20251110081950AddGenderColumnOnEmployeesTable{},
 	}
 }
 
