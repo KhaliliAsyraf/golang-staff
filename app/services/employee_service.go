@@ -79,9 +79,11 @@ func (s *EmployeeService) GetGender(name string) (string, error) {
 		return "", errors.New("failed to parse gender response")
 	}
 
+	facades.Log().Info("Gender response:", body)
+
 	gender, ok := body["gender"].(string)
 	if !ok || gender == "" {
-		gender = "unknown"
+		gender = "male"
 	}
 
 	return gender, nil

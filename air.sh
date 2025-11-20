@@ -1,4 +1,9 @@
 #!/bin/bash
+set -e
+
+# Run migrations
+./install.sh
+
 GO_PATH=$(go env GOPATH)
 GO_BIN=$GO_PATH/bin/air
 

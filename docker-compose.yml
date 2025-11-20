@@ -8,3 +8,28 @@ services:
       - "8080:8080"
     volumes:
       - .:/app
+    depends_on:
+      - postgres
+    environment:
+      DB_CONNECTION: postgres
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_DATABASE: goravel
+      DB_USERNAME: goravel
+      DB_PASSWORD: password
+
+  postgres:
+    image: postgres:16
+    container_name: goravel-postgres
+    restart: always
+    environment:
+      POSTGRES_DB: goravel
+      POSTGRES_USER: goravel
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:

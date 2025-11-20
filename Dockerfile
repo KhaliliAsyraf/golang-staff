@@ -1,16 +1,15 @@
-# Use official Golang image
-FROM golang:1.23.2
+FROM golang:1.25
 
-# Set working directory inside container
+# Install Air BEFORE entering your module
+RUN go install github.com/air-verse/air@latest
+
+ENV PATH="/go/bin:${PATH}"
+
 WORKDIR /app
 
-# Copy go.mod and go.sum first (for caching)
 COPY go.mod go.sum ./
-
-# Download dependencies
 RUN go mod download
 
-# Copy the rest of the project
 COPY . .
 
-CMD ["go", "run", ".", "--port", "8080"]
+CMD ["./air.sh"]

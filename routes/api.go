@@ -36,6 +36,6 @@ func Api() {
 		Prefix("department").
 		Middleware(customMiddleware.Auth()).
 		Group(func(router route.Router) {
-			router.Get("/", departmentController.Index)
+			router.Get("/", departmentController.Index).Name("department.index")
 		})
 }
