@@ -1,0 +1,42 @@
+version: "3.9"
+services:
+  goravel_app:
+    build: .
+    container_name: goravel-app
+    restart: always
+    env_file: .env.prod
+    networks:
+      - goravel_network
+
+  nginx:
+    image: nginx:latest
+    container_name: goravel-nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.prod.conf:/etc/nginx/nginx.conf:ro
+      - /path/to/your/static:/app/public:ro   # optional static mounting
+    depends_on:
+      - goravel_app
+    networks:
+      - goravel_network
+
+  postgres:
+    image: postgres:16
+    container_name: goravel-postgres
+    restart: always
+    environment:
+      POSTGRES_DB: goravel
+      POSTGRES_USER: goravel
+      POSTGRES_PASSWORD: password
+    volumes:
+      - pgdata_prod:/var/lib/postgresql/data
+    networks:
+      - goravel_network
+
+volumes:
+  pgdata_prod:
+
+networks:
+  goravel_network:

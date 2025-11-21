@@ -14,4 +14,6 @@ if [ ! -f $GO_BIN ]; then
 fi
 
 echo "🚀 Starting Air..."
-$GO_BIN
+# $GO_BIN
+# air will read .air.toml server.addr = 0.0.0.0:8080
+air -c .air.toml
