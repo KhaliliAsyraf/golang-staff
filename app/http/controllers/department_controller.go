@@ -1,7 +1,7 @@
 package controllers
 
 import (
-	"goravel/app/models"
+	"goravel/app/services"
 
 	"github.com/goravel/framework/contracts/http"
 	"github.com/goravel/framework/facades"
@@ -24,11 +24,10 @@ func NewDepartmentController() *DepartmentController {
  * @return http.Response
  */
 func (r *DepartmentController) Index(ctx http.Context) http.Response {
+	deptService := services.DepartmentService{}
 	// return cached
 	departments, err := facades.Cache().RememberForever("departments", func() (any, error) {
-		var departments []models.Department
-		facades.Orm().Query().Get(&departments)
-		return departments, nil
+		return deptService.All()
 	})
 
 	if err != nil {
