@@ -1,0 +1,40 @@
+syntax = "proto3";
+
+package department;
+
+option go_package = "goravel/proto/department";
+
+message Department {
+  int64 id = 1;
+  string name = 2;
+  string created_at = 3;
+  string updated_at = 4;
+}
+
+message CreateDepartmentRequest {
+  string name = 1;
+}
+
+message CreateDepartmentResponse {
+  Department department = 1;
+}
+
+message GetDepartmentRequest {
+  int64 id = 1;
+}
+
+message GetDepartmentResponse {
+  Department department = 1;
+}
+
+message ListDepartmentsRequest {}
+
+message ListDepartmentsResponse {
+  repeated Department departments = 1;
+}
+
+service DepartmentService {
+  rpc CreateDepartment(CreateDepartmentRequest) returns (CreateDepartmentResponse);
+  rpc GetDepartment(GetDepartmentRequest) returns (GetDepartmentResponse);
+  rpc ListDepartments(ListDepartmentsRequest) returns (ListDepartmentsResponse);
+}
